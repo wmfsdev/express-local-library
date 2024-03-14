@@ -7,7 +7,7 @@ const Schema = mongoose.Schema
 // create new Schema instance
 const GenreSchema = new Schema({
     // field, type, range and required
-    name: { typeString, minLength: 3, maxLength: 100, required: true }
+    name: { type: String, minLength: 3, maxLength: 100, required: true }
 })
 
 // Virtual property

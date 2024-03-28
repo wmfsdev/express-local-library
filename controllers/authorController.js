@@ -105,12 +105,11 @@ exports.author_delete_get = asyncHandler(async (req, res, next) => {
     Author.findById(req.params.id).exec(),
     Book.find({ author: req.params.id }, "title summary").exec(),
   ]);
-
   if (author === null) {
     // No results.
     res.redirect("/catalog/authors");
   }
-
+  
   res.render("author_delete", {
     title: "Delete Author",
     author: author,
@@ -145,10 +144,62 @@ exports.author_delete_post = asyncHandler(async (req, res, next) => {
 
 // Display Author update form on GET.
 exports.author_update_get = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Author update GET");
+  const author = await Author.findById(req.params.id).exec()
+  console.log(author)
+
+  if (author === null) {
+    // No results
+    res.redirect("/catalog/authors")
+  }
+
+  res.render("author_form", {
+    title: "Update Author",
+    author: author,
+  })
 });
 
+
 // Handle Author update on POST.
-exports.author_update_post = asyncHandler(async (req, res, next) => {
-  res.send("NOT IMPLEMENTED: Author update POST");
-});
+exports.author_update_post = [
+
+  body("first_name", "First name must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("family_name", "Surname must not be empty")
+    .trim()
+    .isLength({ min: 1 })
+    .escape(),
+  body("date_of_birth", "Invalid date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+  body("date_of_death", "Invalid date")
+    .optional({ values: "falsy" })
+    .isISO8601()
+    .toDate(),
+
+  asyncHandler(async (req, res, next) => {
+    const errors = validationResult(req);
+
+    const author = new Author({
+      first_name: req.body.first_name,
+      family_name:  req.body.family_name,
+      date_of_birth: req.body.date_of_birth,
+      date_of_death: req.body.date_of_death,
+      _id: req.params.id,
+    })
+
+    if (!errors.isEmpty()) {
+      // Errors - Render again with sanitized values.
+      res.render("author_form", {
+        title: "errors",
+        author: author,
+        errors: errors.array(),
+      })
+    } else {
+      const updatedAuthor = await Author.findByIdAndUpdate(req.params.id, author, {})
+      res.redirect(updatedAuthor.url)
+    }
+  })
+]

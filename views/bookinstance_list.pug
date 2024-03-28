@@ -16,6 +16,6 @@ block content
             span.text-warning #{val.status}
           if val.status!='Available'
             span  (Due: #{val.due_back_formatted} )
-
+    p There can be no book instances if you wish to delete a book.
   else
     p There are no book copies in this library.

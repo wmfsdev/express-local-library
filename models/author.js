@@ -28,6 +28,14 @@ AuthorSchema.virtual("url").get(function () {
   return `/catalog/author/${this._id}`;
 });
 
+AuthorSchema.virtual("dob").get(function() {
+  return DateTime.fromJSDate(this.date_of_birth).toISODate(); // format 'YYYY-MM-DD'
+})
+
+AuthorSchema.virtual("dod").get(function() {
+  return DateTime.fromJSDate(this.date_of_death).toISODate(); // format 'YYYY-MM-DD'
+})
+
 AuthorSchema.virtual("bd_range").get(function () {
   const dob = DateTime.fromJSDate(this.date_of_birth).toLocaleString(DateTime.DATE_MED)
   const dod = DateTime.fromJSDate(this.date_of_death).toLocaleString(DateTime.DATE_MED)

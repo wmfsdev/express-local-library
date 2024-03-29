@@ -103,7 +103,7 @@ exports.bookinstance_delete_get = asyncHandler(async (req, res, next) => {
     // No results
     res.redirect("/catalog/bookinstances")
   }
-  // console.log(bookinstance)
+  
   res.render("bookinstance_delete", {
     title: "Delete Instance: ",
     book: bookinstance.book,
@@ -129,7 +129,7 @@ exports.bookinstance_update_get = asyncHandler(async (req, res, next) => {
     // No results
     res.redirect("/catalog/bookinstances")
   }
-  console.log(bookinstance)
+
   res.render("bookinstance_update", {
     title: "Update Book Instance",
     bookinstance: bookinstance,
